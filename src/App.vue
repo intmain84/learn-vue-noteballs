@@ -2,7 +2,7 @@
 
 <template>
   <Navbar />
-  <div>
+  <div class="container is-max-desktop pt-4">
     <RouterView></RouterView>
   </div>
 </template>

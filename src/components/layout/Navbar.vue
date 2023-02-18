@@ -1,6 +1,6 @@
 <template>
   <nav class="navbar is-success" role="navigation" aria-label="main navigation">
-    <div class="container is-max-desktop">
+    <div class="container is-max-desktop px-3">
       <div class="navbar-brand is-align-items-center">
         <RouterLink to="/" class="c-navbar-item is-size-3 is-family-monospace"
           >NOTEBALLS</RouterLink
