@@ -17,7 +17,7 @@
       >
         Edit</RouterLink
       >
-      <a href="#" class="card-footer-item" @click="deleteIt">Delete</a>
+      <a href="#" class="card-footer-item">Delete</a>
     </footer>
   </div>
 </template>
@@ -45,13 +45,6 @@ const charQuantity = computed(() => {
   }
   return `${quantity} chatacters`;
 });
-
-//EMITS
-const emit = defineEmits(["deleteNote"]);
-//Delete note
-const deleteIt = () => {
-  emit("deleteNote", props.id);
-};
 </script>
 
 <style scoped></style>
