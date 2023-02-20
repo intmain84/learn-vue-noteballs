@@ -6,7 +6,7 @@
       </div>
       <div class="is-clearfix">
         <div class="is-pulled-right has-text-grey-light">
-          {{ charQuantity }} characters
+          {{ charQuantity }}
         </div>
       </div>
     </div>
@@ -17,28 +17,41 @@
       >
         Edit</RouterLink
       >
-      <a href="#" class="card-footer-item">Delete</a>
+      <a href="#" class="card-footer-item" @click="deleteIt">Delete</a>
     </footer>
   </div>
 </template>
 
 <script setup>
 //IMPORTS
+import { computed } from "vue";
 
 //PROPS
 const props = defineProps({
   id: {
     type: String,
+    required: true,
   },
   content: {
     type: String,
     required: true,
   },
-  charQuantity: {
-    type: Number,
-    required: true,
-  },
 });
+//Computing charachters
+const charQuantity = computed(() => {
+  let quantity = props.content.trim().length;
+  if (quantity === 1) {
+    return `${quantity} chatacter`;
+  }
+  return `${quantity} chatacters`;
+});
+
+//EMITS
+const emit = defineEmits(["deleteNote"]);
+//Delete note
+const deleteIt = () => {
+  emit("deleteNote", props.id);
+};
 </script>
 
 <style scoped></style>
