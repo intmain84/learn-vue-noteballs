@@ -16,7 +16,11 @@
 
         <div class="field is-pulled-right">
           <div class="control">
-            <button class="button is-primary" @click.prevent="addNote">
+            <button
+              class="button is-primary"
+              :disabled="!newNote"
+              @click.prevent="addNote"
+            >
               Add new note
             </button>
           </div>
@@ -29,7 +33,6 @@
       :id="note.id"
       :content="note.content"
       :charQuantity="note.charQuantity"
-      @click.prevent="store.deleteNoteFromStore(note.id)"
     ></Note>
   </div>
 </template>

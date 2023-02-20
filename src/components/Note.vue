@@ -17,7 +17,13 @@
       >
         Edit</RouterLink
       >
-      <a href="#" class="card-footer-item">Delete</a>
+
+      <a
+        href="#"
+        class="card-footer-item"
+        @click.prevent="store.deleteNoteFromStore(id)"
+        >Delete</a
+      >
     </footer>
   </div>
 </template>
@@ -25,6 +31,8 @@
 <script setup>
 //IMPORTS
 import { computed } from "vue";
+
+import { useStoreNotes } from "@/store/storeNotes.js";
 
 //PROPS
 const props = defineProps({
@@ -37,6 +45,9 @@ const props = defineProps({
     required: true,
   },
 });
+
+const store = useStoreNotes();
+
 //Computing charachters
 const charQuantity = computed(() => {
   let quantity = props.content.trim().length;
