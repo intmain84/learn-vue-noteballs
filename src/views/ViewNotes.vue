@@ -19,7 +19,7 @@
             <button
               class="button is-primary"
               :disabled="!newNote"
-              @click.prevent="addNote"
+              @click.prevent="submitNote"
             >
               Add new note
             </button>
@@ -49,7 +49,7 @@ const store = useStoreNotes();
 const newNote = ref("");
 const newNoteRef = ref(null);
 
-const addNote = () => {
+const submitNote = () => {
   store.addNoteToStore(newNote.value);
 
   newNote.value = "";

@@ -12,10 +12,9 @@
           >
         </div>
       </div>
-
       <div class="field is-pulled-right">
         <div class="control">
-          <button class="button is-primary" @click="addNote">Save</button>
+          <button class="button is-primary" @click="submitNote">Save</button>
         </div>
       </div>
     </div>
@@ -35,7 +34,7 @@ const store = useStoreNotes();
 
 const newNote = ref(null);
 
-const addNote = () => {
+const submitNote = () => {
   store.addNoteToStore(newNote.value.value);
   router.push({ name: "notes" });
 };
