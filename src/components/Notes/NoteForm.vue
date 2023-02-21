@@ -4,19 +4,18 @@
       <div class="field">
         <div class="control">
           <textarea
-            ref="newNote"
+            :value="modelValue"
+            ref="noteRef"
+            @input="$emit('update:modelValue', $event.target.value)"
             class="textarea"
             placeholder=" Add a new note, e.g. Cancel subscription"
-            v-focus
-            >{{ id ? noteContent : "" }}</textarea
+            >{{ modelValue ? modelValue : "" }}</textarea
           >
         </div>
       </div>
       <div class="field is-pulled-right">
         <div class="control">
-          <button class="button is-primary" @click="submitNote(id)">
-            {{ buttonText }}
-          </button>
+          <slot name="buttons"></slot>
         </div>
       </div>
     </div>
@@ -24,31 +23,18 @@
 </template>
 
 <script setup>
-import { ref, computed } from "vue";
-import { useRouter } from "vue-router";
-import { useStoreNotes } from "@/store/storeNotes.js";
+import { ref } from "vue";
+const props = defineProps(["id", "modelValue"]);
+const emits = defineEmits(["update:modelValue"]);
 
-const props = defineProps(["id", "buttonText"]);
+const noteRef = ref(null);
 
-const router = useRouter();
-const store = useStoreNotes();
-
-const newNote = ref(null);
-
-//Если компонент формы будет использоваться на странице со списком ноутов, то noteId будет undefined и в сторе выполниться условие добавления! нового ноута.
-//Если компонент формы будет использоваться на странице редактирования конкретного ноута то noteId будет с айдишником и в сторе выполниться условие обновления! редактируемого ноута.
-const submitNote = function (noteId = undefined) {
-  store.addNoteToStore(newNote.value.value, noteId);
-  newNote.value.focus();
-  newNote.value.value = "";
-  if (noteId) {
-    router.push({ name: "notes" });
-  }
+const setFocus = () => {
+  noteRef.value.focus();
 };
 
-const noteContent = computed(() => {
-  const [note] = store.notes.filter((note) => note.id === props.id);
-  return note.content;
+defineExpose({
+  setFocus,
 });
 </script>
 
