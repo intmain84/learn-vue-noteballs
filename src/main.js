@@ -4,7 +4,7 @@ import router from "@/router/index";
 import focus from "@/directives/focus.js";
 
 import App from "@/App.vue";
-import NoteForm from "@/components/NoteForm.vue";
+import NoteForm from "@/components/Notes/NoteForm.vue";
 
 const app = createApp(App);
 const pinia = createPinia();

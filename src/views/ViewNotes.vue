@@ -13,8 +13,8 @@
 
 <script setup>
 //IMPORTS
-import Note from "../components/Note.vue";
-import { useStoreNotes } from "../store/storeNotes.js";
+import Note from "@/components/Notes/Note.vue";
+import { useStoreNotes } from "@/store/storeNotes.js";
 
 //NOTES
 const store = useStoreNotes();
