@@ -20,14 +20,29 @@ export const useStoreNotes = defineStore("storeNotes", () => {
     },
   ]);
 
-  const addNoteToStore = function (newNote) {
-    let dateToId = new Date();
-    let note = {
-      id: dateToId.toString(),
-      content: newNote,
-    };
-
-    notes.value.unshift(note);
+  const addNoteToStore = function (content, noteId) {
+    let note = {};
+    if (noteId === undefined) {
+      let dateToId = new Date();
+      note = {
+        id: dateToId.toString(),
+        content: content,
+      };
+      notes.value.unshift(note);
+    } else {
+      note = {
+        id: noteId,
+        content: content,
+      };
+      const newNotesArray = notes.value.map((element) => {
+        if (element.id === noteId) {
+          element.id = noteId;
+          element.content = content;
+        }
+        return element;
+      });
+      notes.value = newNotesArray;
+    }
   };
 
   const deleteNoteFromStore = function (noteId) {
