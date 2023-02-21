@@ -1,6 +1,6 @@
 <template>
   <div class="notes">
-    <NoteForm buttonText="Add New Note"></NoteForm>
+    <NoteForm ref="bbb" buttonText="Add New Note"></NoteForm>
     <Note
       v-for="note in store.notes"
       :key="note.id"
@@ -13,8 +13,11 @@
 
 <script setup>
 //IMPORTS
+import { ref } from "vue";
 import Note from "@/components/Notes/Note.vue";
 import { useStoreNotes } from "@/store/storeNotes.js";
+
+const bbb = ref(null);
 
 //NOTES
 const store = useStoreNotes();
