@@ -1,9 +1,12 @@
 <template>
   <div class="notes">
-    <!-- <NoteForm ref="bbb" buttonText="Add New Note"></NoteForm> -->
     <NoteForm v-model="newNote" ref="noteRef">
       <template #buttons>
-        <button class="button is-primary" @click="submitNote">
+        <button
+          class="button is-primary"
+          :disabled="!newNote"
+          @click="submitNote"
+        >
           Add New Note
         </button>
       </template>

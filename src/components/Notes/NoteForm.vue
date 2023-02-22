@@ -1,5 +1,5 @@
 <template>
-  <div class="card mb-4">
+  <div class="card mb-4" :class="bgColor">
     <div class="card-content is-clearfix">
       <div class="field">
         <div class="control">
@@ -8,7 +8,7 @@
             ref="noteRef"
             @input="$emit('update:modelValue', $event.target.value)"
             class="textarea"
-            placeholder=" Add a new note, e.g. Cancel subscription"
+            :placeholder="placeholder"
             >{{ modelValue ? modelValue : "" }}</textarea
           >
         </div>
@@ -24,16 +24,27 @@
 
 <script setup>
 import { ref } from "vue";
-const props = defineProps(["id", "modelValue"]);
+const props = defineProps({
+  id: String,
+  modelValue: String,
+  bgColor: String,
+  placeholder: {
+    type: String,
+    default: "Add a new note, e.g. Cancel subscription",
+  },
+});
 const emits = defineEmits(["update:modelValue"]);
 
 const noteRef = ref(null);
+
+const contentText = noteRef;
 
 const setFocus = () => {
   noteRef.value.focus();
 };
 
 defineExpose({
+  contentText,
   setFocus,
 });
 </script>

@@ -1,7 +1,20 @@
 <template>
-  <NoteForm v-model="newNote">
+  <NoteForm
+    v-model="newNote"
+    placeholder="Edit this note"
+    bgColor="has-background-primary-dark"
+  >
     <template #buttons>
-      <button class="button is-primary" @click="submitNote">Save</button>
+      <RouterLink class="button is-danger mr-4" :to="{ name: 'notes' }"
+        >Cancel</RouterLink
+      >
+      <button
+        class="button is-primary"
+        :disabled="!newNote"
+        @click="$router.push({ name: 'notes' })"
+      >
+        Save Notes
+      </button>
     </template>
   </NoteForm>
 </template>
