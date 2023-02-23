@@ -1,7 +1,8 @@
 import { defineStore } from "pinia";
-import { ref } from "vue";
+import { ref, computed } from "vue";
 
 export const useStoreNotes = defineStore("storeNotes", () => {
+  //STATE
   const notes = ref([
     {
       id: "id1",
@@ -20,6 +21,7 @@ export const useStoreNotes = defineStore("storeNotes", () => {
     },
   ]);
 
+  //ACTION. To add a note by passing content and id
   const addNoteToStore = function (content, noteId) {
     let note = {};
     if (noteId === undefined) {
@@ -34,21 +36,46 @@ export const useStoreNotes = defineStore("storeNotes", () => {
         id: noteId,
         content: content,
       };
-      const newNotesArray = notes.value.map((element) => {
-        if (element.id === noteId) {
-          element.id = noteId;
-          element.content = content;
-        }
-        return element;
-      });
-      notes.value = newNotesArray;
+      let noteIndex = notes.value.findIndex((note) => note.id === noteId);
+      notes.value[noteIndex].content = content;
     }
   };
 
+  //ACTION. To delete a note by id
   const deleteNoteFromStore = function (noteId) {
     let newNotes = notes.value.filter((note) => note.id != noteId);
     notes.value = newNotes;
   };
 
-  return { notes, addNoteToStore, deleteNoteFromStore };
+  //GETTER. To get a note's content by id
+  const getNoteContent = computed(() => {
+    return (id) => {
+      const [note] = notes.value.filter((note) => note.id === id);
+      return note.content;
+    };
+  });
+
+  //GETTER. To get total charachters
+  const getTotalChar = computed(() => {
+    let allContent = null;
+    notes.value.forEach((note) => {
+      allContent += note.content.replaceAll(/\s/g, "").length;
+    });
+
+    return allContent;
+  });
+
+  //GETTER. To get notes' quantity
+  const getNotesQuantity = computed(() => {
+    return notes.value.length;
+  });
+
+  return {
+    notes,
+    addNoteToStore,
+    deleteNoteFromStore,
+    getNoteContent,
+    getNotesQuantity,
+    getTotalChar,
+  };
 });

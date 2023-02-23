@@ -9,6 +9,7 @@
             @input="$emit('update:modelValue', $event.target.value)"
             class="textarea"
             :placeholder="placeholder"
+            v-focus
             >{{ modelValue ? modelValue : "" }}</textarea
           >
         </div>

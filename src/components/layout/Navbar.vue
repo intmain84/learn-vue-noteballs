@@ -22,8 +22,12 @@
 
       <div class="navbar-menu" :class="{ 'is-active': burgerMenuIsActive }">
         <div class="navbar-end">
-          <RouterLink class="navbar-item" to="/">Notes</RouterLink>
-          <RouterLink class="navbar-item" to="/stats">Stats</RouterLink>
+          <RouterLink class="navbar-item" @click="closeMobileMenu" to="/"
+            >Notes</RouterLink
+          >
+          <RouterLink class="navbar-item" @click="closeMobileMenu" to="/stats"
+            >Stats</RouterLink
+          >
         </div>
       </div>
     </div>
@@ -40,13 +44,7 @@ const burgerMenuIsActive = ref(false);
 const toggleBurgerMenu = () => {
   burgerMenuIsActive.value = !burgerMenuIsActive.value;
 };
-onBeforeUnmount(() => {
-  burgerMenuIsActive.value = false;
-});
-
-/*
-  Something else
- */
+const closeMobileMenu = () => (burgerMenuIsActive.value = false);
 </script>
 
 <style scoped>

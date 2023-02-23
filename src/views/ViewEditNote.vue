@@ -11,7 +11,7 @@
       <button
         class="button is-primary"
         :disabled="!newNote"
-        @click="$router.push({ name: 'notes' })"
+        @click="submitNote"
       >
         Save Notes
       </button>
@@ -31,10 +31,8 @@ const router = useRouter();
 const store = useStoreNotes();
 
 const newNote = ref("");
-onMounted(() => {
-  const [data] = store.notes.filter((note) => note.id === props.id);
-  newNote.value = data.content;
-});
+
+newNote.value = store.getNoteContent(props.id);
 
 const submitNote = function () {
   store.addNoteToStore(newNote.value, props.id);
