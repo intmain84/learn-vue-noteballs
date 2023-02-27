@@ -2,12 +2,15 @@
   <nav class="navbar is-success" role="navigation" aria-label="main navigation">
     <div class="container is-max-desktop px-3">
       <div class="navbar-brand is-align-items-center">
-        <RouterLink to="/" class="c-navbar-item is-size-3 is-family-monospace"
-          >NOTEBALLS</RouterLink
+        <RouterLink
+          to="/"
+          class="c-navbar-item is-size-3 is-family-monospace"
+          >{{ burgerMenuIsActive }}</RouterLink
         >
         <a
           role="button"
           class="navbar-burger"
+          ref="navbarBurger"
           :class="{ 'is-active': burgerMenuIsActive }"
           aria-label="menu"
           aria-expanded="false"
@@ -20,7 +23,11 @@
         </a>
       </div>
 
-      <div class="navbar-menu" :class="{ 'is-active': burgerMenuIsActive }">
+      <div
+        class="navbar-menu"
+        :class="{ 'is-active': burgerMenuIsActive }"
+        ref="target"
+      >
         <div class="navbar-end">
           <RouterLink class="navbar-item" @click="closeMobileMenu" to="/"
             >Notes</RouterLink
@@ -35,12 +42,26 @@
 </template>
 
 <script setup>
-import { ref, onBeforeUnmount } from "vue";
+import { ref } from "vue";
+import { onClickOutside } from "@vueuse/core";
 
+const target = ref(null);
+const navbarBurger = ref(null);
 /*
   Burger Menu manipulation
  */
 const burgerMenuIsActive = ref(false);
+
+onClickOutside(
+  target,
+  () => {
+    burgerMenuIsActive.value = false;
+  },
+  {
+    ignore: [navbarBurger],
+  }
+);
+
 const toggleBurgerMenu = () => {
   burgerMenuIsActive.value = !burgerMenuIsActive.value;
 };

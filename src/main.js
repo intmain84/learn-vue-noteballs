@@ -1,7 +1,7 @@
 import { createApp } from "vue";
 import { createPinia } from "pinia";
 import router from "@/router/index";
-import focus from "@/directives/focus.js";
+import focus from "@/directives/vFocus.js";
 
 import App from "@/App.vue";
 import NoteForm from "@/components/Notes/NoteForm.vue";

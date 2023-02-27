@@ -10,9 +10,18 @@
             class="textarea"
             :placeholder="placeholder"
             v-focus
+            maxlength="100"
             >{{ modelValue ? modelValue : "" }}</textarea
           >
         </div>
+      </div>
+      <div
+        class="characters is-pulled-left"
+        :class="{ 'max-characters': charQuantity === 100 }"
+      >
+        {{ charQuantity }}
+        {{ charQuantity === 1 ? "character" : "characters" }}
+        {{ charQuantity === 100 ? "is maximum" : "" }}
       </div>
       <div class="field is-pulled-right">
         <div class="control">
@@ -24,7 +33,7 @@
 </template>
 
 <script setup>
-import { ref } from "vue";
+import { ref, watch } from "vue";
 const props = defineProps({
   id: String,
   modelValue: String,
@@ -34,9 +43,11 @@ const props = defineProps({
     default: "Add a new note, e.g. Cancel subscription",
   },
 });
+
 const emits = defineEmits(["update:modelValue"]);
 
 const noteRef = ref(null);
+let charQuantity = ref(0);
 
 const contentText = noteRef;
 
@@ -48,6 +59,17 @@ defineExpose({
   contentText,
   setFocus,
 });
+
+watch(
+  () => props.modelValue,
+  (res) => {
+    charQuantity.value = res.length;
+  }
+);
 </script>
 
-<style scoped></style>
+<style scoped>
+.max-characters {
+  color: red;
+}
+</style>
