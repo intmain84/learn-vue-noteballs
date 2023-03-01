@@ -11,7 +11,11 @@
         </button>
       </template>
     </NoteForm>
+    <div v-if="store.notes.length === 0">
+      <p class="title is-5 my-5">You dont have any notes!</p>
+    </div>
     <Note
+      v-else
       v-for="note in store.notes"
       :key="note.id"
       :id="note.id"

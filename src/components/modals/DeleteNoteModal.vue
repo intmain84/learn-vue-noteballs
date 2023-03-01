@@ -20,8 +20,9 @@
 </template>
 
 <script setup>
-import { ref } from "vue";
+import { ref, onMounted, onUnmounted } from "vue";
 import { onClickOutside } from "@vueuse/core";
+
 // Props and emits
 const props = defineProps({
   modelValue: {
@@ -35,6 +36,20 @@ const emit = defineEmits(["update:modelValue", "deleteNote"]);
 
 //Close modal
 const modalCard = ref(null);
+
+const handleKeydown = (e) => {
+  if (e.key === "Escape" && props.modelValue) {
+    closeModal();
+  }
+};
+
+onMounted(() => {
+  document.addEventListener("keydown", handleKeydown);
+});
+
+onUnmounted(() => {
+  document.removeEventListener("keydown", handleKeydown);
+});
 
 const closeModal = () => {
   emit("update:modelValue", false);

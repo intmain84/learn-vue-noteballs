@@ -21,15 +21,17 @@
       <a
         href="#"
         class="card-footer-item"
-        @click.prevent="modals.deleteNoteModal = true"
+        @click.prevent="modals.deleteNote = true"
         >Delete</a
       >
     </footer>
-    <DeleteNoteModal
-      v-model="modals.deleteNoteModal"
-      v-if="modals.deleteNoteModal"
-      @deleteNote="deleteNote(id)"
-    ></DeleteNoteModal>
+    <Teleport to="body">
+      <DeleteNoteModal
+        v-model="modals.deleteNote"
+        v-if="modals.deleteNote"
+        @deleteNote="deleteNote(id)"
+      ></DeleteNoteModal>
+    </Teleport>
   </div>
 </template>
 
@@ -64,7 +66,7 @@ const charQuantity = computed(() => {
 
 //Modals
 const modals = reactive({
-  deleteNoteModal: false,
+  deleteNote: false,
 });
 //
 
