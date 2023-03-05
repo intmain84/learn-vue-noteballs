@@ -8,9 +8,12 @@ import {
   updateDoc,
   onSnapshot,
   deleteDoc,
+  query,
+  orderBy,
+  limit,
 } from "firebase/firestore";
 
-const notesCollection = [db, "notes"];
+const notesRef = collection(db, "notes");
 
 export const useStoreNotes = defineStore("storeNotes", () => {
   //STATE
@@ -18,9 +21,10 @@ export const useStoreNotes = defineStore("storeNotes", () => {
 
   //ACTION. Get all notes from Firestore in realtime
   const getAllNotesFromDb = async function () {
-    onSnapshot(collection(...notesCollection), (querySnaphot) => {
+    let q = query(notesRef, orderBy("createdAt", "desc"));
+    onSnapshot(q, (coll) => {
       let newNotes = [];
-      querySnaphot.forEach((doc) => {
+      coll.forEach((doc) => {
         newNotes.push({
           id: doc.id,
           content: doc.data().content,
@@ -33,11 +37,13 @@ export const useStoreNotes = defineStore("storeNotes", () => {
   //ACTION. To add a note by passing content and id
   const addNoteToStore = async function (content, noteId) {
     if (noteId === undefined) {
-      await addDoc(collection(...notesCollection), {
+      const createdAt = Date.now();
+      await addDoc(notesRef, {
         content,
+        createdAt: createdAt,
       });
     } else {
-      const note = doc(...notesCollection, noteId);
+      const note = doc(db, "notes", noteId);
       await updateDoc(note, {
         content,
       });
@@ -46,7 +52,7 @@ export const useStoreNotes = defineStore("storeNotes", () => {
 
   //ACTION. To delete a note by id
   const deleteNoteFromStore = async function (noteIdToDelete) {
-    await deleteDoc(doc(...notesCollection, noteIdToDelete));
+    await deleteDoc(doc(db, "notes", noteIdToDelete));
   };
 
   //GETTER. To get a note's content by id

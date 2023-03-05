@@ -33,7 +33,7 @@
 </template>
 
 <script setup>
-import { ref, watch } from "vue";
+import { ref, watch, onMounted } from "vue";
 const props = defineProps({
   id: String,
   modelValue: String,
@@ -58,6 +58,10 @@ const setFocus = () => {
 defineExpose({
   contentText,
   setFocus,
+});
+
+onMounted(() => {
+  charQuantity.value = props.modelValue.length;
 });
 
 watch(
