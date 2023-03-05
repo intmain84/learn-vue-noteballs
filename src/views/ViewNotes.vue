@@ -27,13 +27,19 @@
 
 <script setup>
 //IMPORTS
-import { ref } from "vue";
+import { ref, onMounted } from "vue";
 import Note from "@/components/Notes/Note.vue";
 import { useStoreNotes } from "@/store/storeNotes.js";
 
-//NOTES
+//GET NOTES
 const store = useStoreNotes();
 
+onMounted(async () => {
+  store.getAllNotesFromDb();
+});
+//
+
+//ADD NEW NOTES
 const newNote = ref("");
 const noteRef = ref(null);
 
@@ -42,6 +48,7 @@ const submitNote = function () {
   newNote.value = "";
   noteRef.value.setFocus();
 };
+//
 </script>
 
 <style scoped></style>

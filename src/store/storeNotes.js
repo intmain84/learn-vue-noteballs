@@ -1,50 +1,52 @@
 import { defineStore } from "pinia";
 import { ref, computed } from "vue";
+import { db } from "@/js/firebase.js";
+import {
+  collection,
+  doc,
+  addDoc,
+  updateDoc,
+  onSnapshot,
+  deleteDoc,
+} from "firebase/firestore";
+
+const notesCollection = [db, "notes"];
 
 export const useStoreNotes = defineStore("storeNotes", () => {
   //STATE
-  const notes = ref([
-    {
-      id: "id1",
-      content:
-        "Placeholder is also called as dummy text or filler text. It is a character, word, or string of characters that temporarily holds the place to the final data",
-    },
-    {
-      id: "id2",
-      content:
-        "The placeholder text is set with the placeholder attribute, which specifies a hint that describes the expected value of an input field. Tip: The default color of the placeholder text is light grey in most browsers",
-    },
-    {
-      id: "id3",
-      content:
-        "It helps preview fonts, spoof an e-mail spam filter, or reserve a specific place on a web page or other document for images, text, or some other object",
-    },
-  ]);
+  const notes = ref([]);
+
+  //ACTION. Get all notes from Firestore in realtime
+  const getAllNotesFromDb = async function () {
+    onSnapshot(collection(...notesCollection), (querySnaphot) => {
+      let newNotes = [];
+      querySnaphot.forEach((doc) => {
+        newNotes.push({
+          id: doc.id,
+          content: doc.data().content,
+        });
+      });
+      notes.value = newNotes;
+    });
+  };
 
   //ACTION. To add a note by passing content and id
-  const addNoteToStore = function (content, noteId) {
-    let note = {};
+  const addNoteToStore = async function (content, noteId) {
     if (noteId === undefined) {
-      let dateToId = new Date();
-      note = {
-        id: dateToId.toString(),
-        content: content,
-      };
-      notes.value.unshift(note);
+      await addDoc(collection(...notesCollection), {
+        content,
+      });
     } else {
-      note = {
-        id: noteId,
-        content: content,
-      };
-      let noteIndex = notes.value.findIndex((note) => note.id === noteId);
-      notes.value[noteIndex].content = content;
+      const note = doc(...notesCollection, noteId);
+      await updateDoc(note, {
+        content,
+      });
     }
   };
 
   //ACTION. To delete a note by id
-  const deleteNoteFromStore = function (noteId) {
-    let newNotes = notes.value.filter((note) => note.id != noteId);
-    notes.value = newNotes;
+  const deleteNoteFromStore = async function (noteIdToDelete) {
+    await deleteDoc(doc(...notesCollection, noteIdToDelete));
   };
 
   //GETTER. To get a note's content by id
@@ -77,5 +79,6 @@ export const useStoreNotes = defineStore("storeNotes", () => {
     getNoteContent,
     getNotesQuantity,
     getTotalChar,
+    getAllNotesFromDb,
   };
 });
