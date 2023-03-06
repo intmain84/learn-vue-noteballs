@@ -5,6 +5,9 @@
         {{ content }}
       </div>
       <div class="is-clearfix">
+        <div class="is-pulled-left has-text-grey-light">
+          {{ noteDate }}
+        </div>
         <div class="is-pulled-right has-text-grey-light">
           {{ charQuantity }}
         </div>
@@ -38,6 +41,7 @@
 <script setup>
 //IMPORTS
 import { computed, reactive } from "vue";
+import { useDateFormat } from "@vueuse/core";
 import DeleteNoteModal from "../modals/DeleteNoteModal.vue";
 import { useStoreNotes } from "@/store/storeNotes.js";
 
@@ -48,6 +52,10 @@ const props = defineProps({
     required: true,
   },
   content: {
+    type: String,
+    required: true,
+  },
+  date: {
     type: String,
     required: true,
   },
@@ -62,6 +70,22 @@ const charQuantity = computed(() => {
     return `${quantity} chatacter`;
   }
   return `${quantity} chatacters`;
+});
+
+//Getting date
+//Version 1
+// const noteDate = computed(() => {
+//   let dateFormat = new Date(props.date);
+//   const day = dateFormat.getDate().toString().padStart(2, "0");
+//   const month = (dateFormat.getMonth() + 1).toString().padStart(2, "0");
+//   const fullYear = dateFormat.getFullYear();
+//   return `${day}.${month}.${fullYear}`;
+// });
+
+//Version 2
+const noteDate = computed(() => {
+  const formatted = useDateFormat(props.date, "DD.MM.YYYY");
+  return formatted.value;
 });
 
 //Modals

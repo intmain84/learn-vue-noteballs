@@ -10,7 +10,6 @@ import {
   deleteDoc,
   query,
   orderBy,
-  limit,
 } from "firebase/firestore";
 
 const notesRef = collection(db, "notes");
@@ -19,28 +18,35 @@ export const useStoreNotes = defineStore("storeNotes", () => {
   //STATE
   const notes = ref([]);
 
+  let isProgressbar = ref(false);
+
   //ACTION. Get all notes from Firestore in realtime
   const getAllNotesFromDb = async function () {
+    isProgressbar.value = true;
     let q = query(notesRef, orderBy("createdAt", "desc"));
     onSnapshot(q, (coll) => {
       let newNotes = [];
+
       coll.forEach((doc) => {
         newNotes.push({
           id: doc.id,
           content: doc.data().content,
+          createdAt: doc.data().createdAt,
         });
       });
       notes.value = newNotes;
+      isProgressbar.value = false;
     });
   };
 
   //ACTION. To add a note by passing content and id
   const addNoteToStore = async function (content, noteId) {
     if (noteId === undefined) {
-      const createdAt = Date.now();
+      const createdAt = Date();
+      console.log(typeof createdAt);
       await addDoc(notesRef, {
         content,
-        createdAt: createdAt,
+        createdAt,
       });
     } else {
       const note = doc(db, "notes", noteId);
@@ -80,6 +86,7 @@ export const useStoreNotes = defineStore("storeNotes", () => {
 
   return {
     notes,
+    isProgressbar,
     addNoteToStore,
     deleteNoteFromStore,
     getNoteContent,
