@@ -10,7 +10,9 @@
         </li>
       </ul>
     </div>
-    <component :is="tabs[currentTab]"></component>
+    <KeepAlive>
+      <component :is="tabs[currentTab]"></component>
+    </KeepAlive>
   </div>
 </template>
 

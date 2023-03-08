@@ -33,6 +33,9 @@
           <RouterLink class="navbar-item" @click="closeMobileMenu" to="/stats"
             >Stats</RouterLink
           >
+          <RouterLink class="navbar-item" @click="closeMobileMenu" to="/auth"
+            >Authorization</RouterLink
+          >
         </div>
       </div>
     </div>
