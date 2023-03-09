@@ -5,16 +5,26 @@
         <h1 class="title is-3">Registration</h1>
         <form @submit.prevent="handleRegistration">
           <div class="field">
-            <label class="label">Login</label>
+            <label class="label">Email</label>
             <div class="control">
-              <input v-model="data.login" class="input" type="text" />
+              <input
+                v-model="data.email"
+                class="input"
+                type="email"
+                @input="requestError = null"
+              />
             </div>
           </div>
 
           <div class="field">
             <label class="label">Password</label>
             <div class="control">
-              <input v-model="data.password" class="input" type="password" />
+              <input
+                v-model="data.password"
+                class="input"
+                type="password"
+                @input="requestError = null"
+              />
             </div>
           </div>
           <div class="field">
@@ -24,14 +34,22 @@
                 v-model="data.passwordAgain"
                 class="input"
                 type="password"
+                @input="requestError = null"
               />
             </div>
           </div>
           <p
             :class="compairingPasswords"
-            v-if="data.password.length > 0 && data.passwordAgain.length > 0"
+            v-if="
+              data.password.length > 0 &&
+              data.passwordAgain.length > 0 &&
+              !requestError
+            "
           >
             {{ passwordsMatch }}
+          </p>
+          <p class="notEqualFields" v-if="requestError">
+            {{ requestError }}
           </p>
           <div class="field">
             <div class="control">
@@ -50,13 +68,18 @@
 </template>
 
 <script setup>
-import { reactive, computed } from "vue";
+import { ref, reactive, computed } from "vue";
+import { useStoreAuth } from "@/store/storeAuth";
+
+const storeAuth = useStoreAuth();
 
 const data = reactive({
-  login: "",
+  email: "",
   password: "",
   passwordAgain: "",
 });
+
+const requestError = ref(null);
 
 const passwordsMatch = computed(() => {
   if (data.password === data.passwordAgain) return "Passwords are equal";
@@ -70,12 +93,29 @@ const compairingPasswords = computed(() => {
   };
 });
 
-const handleRegistration = () => {
-  if (!data.login || !data.password || !data.passwordAgain) {
+const handleRegistration = async () => {
+  if (!data.email || !data.password || !data.passwordAgain) {
     alert("Заполни все поля");
     return;
   }
-  console.log("Submit register");
+  const userData = {
+    email: data.email,
+    password: data.password,
+  };
+
+  try {
+    await storeAuth.registerUser(userData);
+  } catch (error) {
+    console.log("asd", error);
+    if (error.code === "auth/email-already-in-use") {
+      requestError.value = "This email already registered";
+      return;
+    }
+    if (error.code === "auth/weak-password") {
+      requestError.value = "Password should be at least 6 characters long";
+      return;
+    }
+  }
 };
 </script>
 

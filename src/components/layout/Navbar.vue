@@ -26,6 +26,23 @@
         :class="{ 'is-active': burgerMenuIsActive }"
         ref="target"
       >
+        <div>
+          <button
+            v-if="!storeAuth.getUser"
+            class="navbar-item"
+            @click="closeMobileMenu"
+            to="/auth"
+          >
+            Auth
+          </button>
+          <button
+            v-else="storeAuth.getUser"
+            class="navbar-item"
+            @click="handleLogoutUser"
+          >
+            Logout
+          </button>
+        </div>
         <div class="navbar-end">
           <RouterLink class="navbar-item" @click="closeMobileMenu" to="/"
             >Notes</RouterLink
@@ -33,6 +50,7 @@
           <RouterLink class="navbar-item" @click="closeMobileMenu" to="/stats"
             >Stats</RouterLink
           >
+
           <RouterLink class="navbar-item" @click="closeMobileMenu" to="/auth"
             >Authorization</RouterLink
           >
@@ -45,6 +63,9 @@
 <script setup>
 import { ref } from "vue";
 import { onClickOutside } from "@vueuse/core";
+import { useStoreAuth } from "@/store/storeAuth";
+
+const storeAuth = useStoreAuth();
 
 const target = ref(null);
 const navbarBurger = ref(null);
@@ -67,6 +88,12 @@ const toggleBurgerMenu = () => {
   burgerMenuIsActive.value = !burgerMenuIsActive.value;
 };
 const closeMobileMenu = () => (burgerMenuIsActive.value = false);
+
+//User managing
+const handleLogoutUser = () => {
+  storeAuth.logoutUser();
+  closeMobileMenu();
+};
 </script>
 
 <style scoped>
