@@ -70,8 +70,11 @@
 <script setup>
 import { ref, reactive, computed } from "vue";
 import { useStoreAuth } from "@/store/storeAuth";
+import { useRouter } from "vue-router";
 
 const storeAuth = useStoreAuth();
+
+const router = useRouter();
 
 const data = reactive({
   email: "",
@@ -105,8 +108,8 @@ const handleRegistration = async () => {
 
   try {
     await storeAuth.registerUser(userData);
+    router.push({ name: "notes" });
   } catch (error) {
-    console.log("asd", error);
     if (error.code === "auth/email-already-in-use") {
       requestError.value = "This email already registered";
       return;

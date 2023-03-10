@@ -43,7 +43,6 @@ export const useStoreNotes = defineStore("storeNotes", () => {
   const addNoteToStore = async function (content, noteId) {
     if (noteId === undefined) {
       const createdAt = Date();
-      console.log(typeof createdAt);
       await addDoc(notesRef, {
         content,
         createdAt,

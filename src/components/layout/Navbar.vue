@@ -20,24 +20,23 @@
           <span aria-hidden="true"></span>
         </a>
       </div>
-
       <div
         class="navbar-menu"
         :class="{ 'is-active': burgerMenuIsActive }"
         ref="target"
       >
-        <div>
+        <div class="navbar-start">
           <button
-            v-if="!storeAuth.getUser"
-            class="navbar-item"
-            @click="closeMobileMenu"
-            to="/auth"
+            v-if="!storeAuth.getUser.value.id"
+            class="button is-small mt-3 ml-4 auth"
+            @click="handleLoginUser"
           >
             Auth
           </button>
+
           <button
-            v-else="storeAuth.getUser"
-            class="navbar-item"
+            v-else
+            class="button is-small mt-3 ml-4 logout"
             @click="handleLogoutUser"
           >
             Logout
@@ -50,10 +49,6 @@
           <RouterLink class="navbar-item" @click="closeMobileMenu" to="/stats"
             >Stats</RouterLink
           >
-
-          <RouterLink class="navbar-item" @click="closeMobileMenu" to="/auth"
-            >Authorization</RouterLink
-          >
         </div>
       </div>
     </div>
@@ -62,10 +57,13 @@
 
 <script setup>
 import { ref } from "vue";
+import { useRouter } from "vue-router";
 import { onClickOutside } from "@vueuse/core";
 import { useStoreAuth } from "@/store/storeAuth";
 
 const storeAuth = useStoreAuth();
+
+const router = useRouter();
 
 const target = ref(null);
 const navbarBurger = ref(null);
@@ -92,6 +90,12 @@ const closeMobileMenu = () => (burgerMenuIsActive.value = false);
 //User managing
 const handleLogoutUser = () => {
   storeAuth.logoutUser();
+  closeMobileMenu();
+  router.push({ name: "auth" });
+};
+
+const handleLoginUser = () => {
+  router.push({ name: "auth" });
   closeMobileMenu();
 };
 </script>

@@ -5,11 +5,25 @@ import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
   signOut,
+  onAuthStateChanged,
 } from "firebase/auth";
 
 export const useStoreAuth = defineStore("storeAuth", () => {
   //STATE
-  const user = ref("");
+  const currentUser = ref({});
+
+  //ACTION. Observing user
+  const init = () => {
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        currentUser.value.id = user.uid;
+        currentUser.value.email = user.email;
+      } else {
+        currentUser.value = {};
+      }
+    });
+  };
+
   //ACTION. Register new user
   const registerUser = async function (userData) {
     try {
@@ -19,7 +33,6 @@ export const useStoreAuth = defineStore("storeAuth", () => {
         userData.password
       );
       const userRequest = userCredential;
-      user.value = auth.currentUser;
 
       return userRequest;
     } catch (error) {
@@ -30,12 +43,7 @@ export const useStoreAuth = defineStore("storeAuth", () => {
   //ACTION. Login user
   const loginUser = async function (userData) {
     try {
-      const userCredential = await signInWithEmailAndPassword(
-        auth,
-        userData.email,
-        userData.password
-      );
-      const user = userCredential.user;
+      await signInWithEmailAndPassword(auth, userData.email, userData.password);
     } catch (error) {
       throw error;
     }
@@ -44,19 +52,15 @@ export const useStoreAuth = defineStore("storeAuth", () => {
   //ACTION. Logout user
   const logoutUser = () => {
     signOut(auth)
-      .then(() => {
-        user.value = null;
-        console.log(user);
-        console.log("Sign out done");
-      })
+      .then()
       .catch((error) => {
-        console.log("Sign out error");
+        console.log(error);
       });
   };
 
   //GETTER
   const getUser = computed(() => {
-    return user;
+    return currentUser;
   });
 
   return {
@@ -64,5 +68,6 @@ export const useStoreAuth = defineStore("storeAuth", () => {
     logoutUser,
     getUser,
     registerUser,
+    init,
   };
 });

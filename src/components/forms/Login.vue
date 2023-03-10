@@ -36,8 +36,11 @@
 <script setup>
 import { ref, reactive } from "vue";
 import { useStoreAuth } from "@/store/storeAuth";
+import { useRouter } from "vue-router";
 
 const storeAuth = useStoreAuth();
+
+const router = useRouter();
 
 const data = reactive({
   email: "",
@@ -58,6 +61,7 @@ const handleLogin = async () => {
 
   try {
     await storeAuth.loginUser(userData);
+    router.push({ name: "notes" });
   } catch (error) {
     if (error.code === "auth/user-not-found") {
       requestError.value = "User not found";

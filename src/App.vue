@@ -11,7 +11,15 @@
 /* 
 Imoorts
 */
+import { onMounted } from "vue";
+import { useStoreAuth } from "@/store/storeAuth.js";
 import Navbar from "@/components/layout/Navbar.vue";
+
+const storeAuth = useStoreAuth();
+
+onMounted(() => {
+  storeAuth.init();
+});
 </script>
 
 <style>
