@@ -41,10 +41,6 @@ import { useStoreNotes } from "@/store/storeNotes.js";
 
 //GET NOTES
 const store = useStoreNotes();
-
-onMounted(async () => {
-  await store.getAllNotesFromDb();
-});
 //
 
 //ADD NEW NOTES

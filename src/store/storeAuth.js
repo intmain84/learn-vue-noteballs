@@ -8,17 +8,19 @@ import {
   onAuthStateChanged,
 } from "firebase/auth";
 
+import { useStoreNotes } from "@/store/storeNotes";
+
 export const useStoreAuth = defineStore("storeAuth", () => {
   //STATE
   const currentUser = ref({});
 
   //ACTION. Observing user
   const init = () => {
+    const store = useStoreNotes();
     onAuthStateChanged(auth, (user) => {
       if (user) {
         currentUser.value.id = user.uid;
         currentUser.value.email = user.email;
-        console.log(currentUser);
       } else {
         currentUser.value = {};
         console.log(currentUser);
@@ -66,6 +68,7 @@ export const useStoreAuth = defineStore("storeAuth", () => {
   });
 
   return {
+    currentUser,
     loginUser,
     logoutUser,
     getUser,

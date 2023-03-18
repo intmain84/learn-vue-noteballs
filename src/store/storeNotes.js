@@ -12,13 +12,23 @@ import {
   orderBy,
 } from "firebase/firestore";
 
-const notesRef = collection(db, "notes");
+import { useStoreAuth } from "@/store/storeAuth";
+
+let userId;
+let notesRef;
 
 export const useStoreNotes = defineStore("storeNotes", () => {
   //STATE
   const notes = ref([]);
 
   let isProgressbar = ref(false);
+
+  const init = async function () {
+    const storeAuth = useStoreAuth();
+    userId = storeAuth.currentUser.id;
+    notesRef = collection(db, "users", `${userId}`, "notes");
+    await getAllNotesFromDb();
+  };
 
   //ACTION. Get all notes from Firestore in realtime
   const getAllNotesFromDb = async function () {
@@ -48,7 +58,13 @@ export const useStoreNotes = defineStore("storeNotes", () => {
         createdAt,
       });
     } else {
-      const note = doc(db, "notes", noteId);
+      const note = doc(
+        db,
+        "users",
+        "yazjV8RvYMT98B2zGM3AWYOVgc43",
+        "notes",
+        noteId
+      );
       await updateDoc(note, {
         content,
       });
@@ -57,7 +73,9 @@ export const useStoreNotes = defineStore("storeNotes", () => {
 
   //ACTION. To delete a note by id
   const deleteNoteFromStore = async function (noteIdToDelete) {
-    await deleteDoc(doc(db, "notes", noteIdToDelete));
+    await deleteDoc(
+      doc(db, "users", "yazjV8RvYMT98B2zGM3AWYOVgc43", "notes", noteIdToDelete)
+    );
   };
 
   //GETTER. To get a note's content by id
@@ -84,6 +102,7 @@ export const useStoreNotes = defineStore("storeNotes", () => {
   });
 
   return {
+    init,
     notes,
     isProgressbar,
     addNoteToStore,
