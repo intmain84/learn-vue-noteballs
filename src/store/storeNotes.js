@@ -26,6 +26,7 @@ export const useStoreNotes = defineStore("storeNotes", () => {
   const init = async function () {
     const storeAuth = useStoreAuth();
     userId = storeAuth.currentUser.id;
+    console.log(userId, "in store init()");
     notesRef = collection(db, "users", `${userId}`, "notes");
     await getAllNotesFromDb();
   };
@@ -33,7 +34,7 @@ export const useStoreNotes = defineStore("storeNotes", () => {
   //ACTION. Get all notes from Firestore in realtime
   const getAllNotesFromDb = async function () {
     isProgressbar.value = true;
-    let q = query(notesRef, orderBy("createdAt", "desc"));
+    let q = query(notesRef, orderBy("createdAt", "asc"));
     onSnapshot(q, (coll) => {
       let newNotes = [];
 
@@ -53,18 +54,13 @@ export const useStoreNotes = defineStore("storeNotes", () => {
   const addNoteToStore = async function (content, noteId) {
     if (noteId === undefined) {
       const createdAt = Date();
+      console.log("addNote", notesRef);
       await addDoc(notesRef, {
         content,
         createdAt,
       });
     } else {
-      const note = doc(
-        db,
-        "users",
-        "yazjV8RvYMT98B2zGM3AWYOVgc43",
-        "notes",
-        noteId
-      );
+      const note = doc(db, "users", `${userId}`, "notes", noteId);
       await updateDoc(note, {
         content,
       });
@@ -73,9 +69,12 @@ export const useStoreNotes = defineStore("storeNotes", () => {
 
   //ACTION. To delete a note by id
   const deleteNoteFromStore = async function (noteIdToDelete) {
-    await deleteDoc(
-      doc(db, "users", "yazjV8RvYMT98B2zGM3AWYOVgc43", "notes", noteIdToDelete)
-    );
+    await deleteDoc(doc(db, "users", `${userId}`, "notes", noteIdToDelete));
+  };
+
+  //ACTION. To clear notes array after logout
+  const clearNotes = function () {
+    notes.value = [];
   };
 
   //GETTER. To get a note's content by id
@@ -111,5 +110,6 @@ export const useStoreNotes = defineStore("storeNotes", () => {
     getNotesQuantity,
     getTotalChar,
     getAllNotesFromDb,
+    clearNotes,
   };
 });

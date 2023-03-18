@@ -1,6 +1,6 @@
 <template>
   <div class="notes">
-    <NoteForm v-model="newNote" ref="noteRef">
+    <NoteForm v-if="storeAuth.currentUser.id" v-model="newNote" ref="noteRef">
       <template #buttons>
         <button
           class="button is-primary"
@@ -11,13 +11,24 @@
         </button>
       </template>
     </NoteForm>
+    <div v-else-if="!storeAuth.currentUser.id">
+      <p class="title is-5 my-5">
+        Please, <RouterLink to="/auth">sign in</RouterLink> to add notes.
+      </p>
+    </div>
 
     <progress
       v-if="store.isProgressbar"
       class="progress is-small is-primary"
       max="100"
     ></progress>
-    <div v-else-if="store.notes.length === 0 && !store.isProgressbar">
+    <div
+      v-else-if="
+        store.notes.length === 0 &&
+        !store.isProgressbar &&
+        storeAuth.currentUser.id
+      "
+    >
       <p class="title is-5 my-5">You dont have any notes!</p>
     </div>
 
@@ -35,13 +46,13 @@
 
 <script setup>
 //IMPORTS
-import { ref, onMounted } from "vue";
+import { ref } from "vue";
 import Note from "@/components/Notes/Note.vue";
 import { useStoreNotes } from "@/store/storeNotes.js";
+import { useStoreAuth } from "@/store/storeAuth.js";
 
-//GET NOTES
 const store = useStoreNotes();
-//
+const storeAuth = useStoreAuth();
 
 //ADD NEW NOTES
 const newNote = ref("");

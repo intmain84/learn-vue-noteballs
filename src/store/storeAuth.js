@@ -21,9 +21,12 @@ export const useStoreAuth = defineStore("storeAuth", () => {
       if (user) {
         currentUser.value.id = user.uid;
         currentUser.value.email = user.email;
+        store.init();
+        console.log("Auth", currentUser.value.id);
       } else {
         currentUser.value = {};
-        console.log(currentUser);
+        store.clearNotes();
+        console.log("nonAuth");
       }
     });
   };
