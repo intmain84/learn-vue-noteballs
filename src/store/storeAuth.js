@@ -18,8 +18,10 @@ export const useStoreAuth = defineStore("storeAuth", () => {
       if (user) {
         currentUser.value.id = user.uid;
         currentUser.value.email = user.email;
+        console.log(currentUser);
       } else {
         currentUser.value = {};
+        console.log(currentUser);
       }
     });
   };
