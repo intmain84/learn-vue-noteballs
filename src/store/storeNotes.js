@@ -27,7 +27,7 @@ export const useStoreNotes = defineStore("storeNotes", () => {
     const storeAuth = useStoreAuth();
     userId = storeAuth.currentUser.id;
     console.log(userId, "in store init()");
-    notesRef = collection(db, "users", `${userId}`, "notes");
+    notesRef = collection(db, "users", userId, "notes");
     await getAllNotesFromDb();
   };
 
