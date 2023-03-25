@@ -22,7 +22,7 @@ export const useStoreAuth = defineStore("storeAuth", () => {
         currentUser.value.id = user.uid;
         currentUser.value.email = user.email;
         store.init();
-        console.log("Auth", currentUser.value.id);
+        console.log("1");
       } else {
         currentUser.value = {};
         store.clearNotes();
